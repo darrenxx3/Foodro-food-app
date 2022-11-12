@@ -1,18 +1,18 @@
 <?php
 include("conn.php");
 
-$result=mysqli_query($connection, "SELECT * FROM Users");
+$result=mysqli_query($connection, "SELECT * FROM Food");
 $response = array();
 
-if(mysqli_num_rows($result)>0){
+if(mysqli_num_rows
+($result)>0){
     $response["data"] = array();
     while($r=mysqli_fetch_array($result)){
-        $user = array();
-        $user["user_id"] = $r["user_id"];
-        $user["username"] = $r["username"];
-        $user["email"] = $r["email"];
-        $user["role_id"] = $r["role_id"];
-        array_push($response["data"], $user);
+        $food = array();
+        $food["food_id"] = $r["food_id"];
+        $food["food_name"] = $r["food_name"];
+        $food["food_image"] = $r["food_image"];
+        array_push($response["data"], $food);
     }
     $response["success"] = 1;
     $response["message"] = "OK";
