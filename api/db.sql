@@ -2,22 +2,22 @@ USE mobapp;
 DROP DATABASE IF EXISTS mobapp;
 CREATE DATABASE mobapp;
 USE mobapp;
-CREATE TABLE IF NOT EXISTS Roles (
+CREATE TABLE Roles (
     role_id CHAR(10) NOT NULL,
     role_name VARCHAR(50) NOT NULL,
     PRIMARY KEY (role_id)
 );
-CREATE TABLE IF NOT EXISTS Status (
+CREATE TABLE Status (
     status_id CHAR(10) NOT NULL,
     status_name VARCHAR(50) NOT NULL,
     PRIMARY KEY (status_id)
 );
-CREATE TABLE IF NOT EXISTS PaymentCategory (
+CREATE TABLE PaymentCategory (
     category_id CHAR(10) NOT NULL,
     payment_name VARCHAR(100) NOT NULL,
     PRIMARY KEY (category_id)
 );
-CREATE TABLE IF NOT EXISTS Users (
+CREATE TABLE Users (
     user_id CHAR(10) NOT NULL,
     username VARCHAR(100) NOT NULL,
     password VARCHAR(100) NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS Users (
     FOREIGN KEY (role_id) REFERENCES Roles(role_id),
     UNIQUE(email)
 );
-CREATE TABLE IF NOT EXISTS Food (
+CREATE TABLE Food (
     food_id CHAR(10) NOT NULL,
     food_name VARCHAR(50) NOT NULL,
     food_price INT NOT NULL,
@@ -36,21 +36,21 @@ CREATE TABLE IF NOT EXISTS Food (
     PRIMARY KEY (food_id),
     FOREIGN KEY (merchant_id) REFERENCES Users(user_id)
 );
-CREATE TABLE IF NOT EXISTS OrderDetail (
+CREATE TABLE OrderDetail (
     order_id CHAR(10) NOT NULL,
     food_id CHAR(10) NOT NULL,
     quantity INT NOT NULL,
     PRIMARY KEY (order_id),
     FOREIGN KEY (food_id) REFERENCES Food(food_id)
 );
-CREATE TABLE IF NOT EXISTS Payment (
+CREATE TABLE Payment (
     payment_id CHAR(10) NOT NULL,
     category_id CHAR(10) NOT NULL,
     totalPayment INT NOT NULL,
     PRIMARY KEY (payment_id),
     FOREIGN KEY (category_id) REFERENCES PaymentCategory(category_id)
 );
-CREATE TABLE IF NOT EXISTS Orders (
+CREATE TABLE Orders (
     order_id CHAR(10) NOT NULL,
     user_id CHAR(10) NOT NULL,
     status_id CHAR(10) NOT NULL,

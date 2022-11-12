@@ -1,7 +1,8 @@
 <?php
 include("conn.php");
+$merchant_id = $_GET["merchID"];
 
-$result = mysqli_query($connection, "SELECT * FROM Food");
+$result = mysqli_query($connection, "SELECT * FROM Food WHERE merchant_id='${merchant_id}'");
 $response = array();
 
 if (mysqli_num_rows($result) > 0) {
