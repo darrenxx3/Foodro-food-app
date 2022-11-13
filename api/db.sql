@@ -53,7 +53,7 @@ CREATE TABLE Orders (
     PRIMARY KEY (order_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (status_id) REFERENCES Status(status_id),
-    FOREIGN KEY (payment_id) REFERENCES Payment(payment_id),
+    FOREIGN KEY (payment_id) REFERENCES Payment(payment_id)
 );
 
 CREATE TABLE OrderDetail (
