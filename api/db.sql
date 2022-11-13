@@ -36,13 +36,7 @@ CREATE TABLE Food (
     PRIMARY KEY (food_id),
     FOREIGN KEY (merchant_id) REFERENCES Users(user_id)
 );
-CREATE TABLE OrderDetail (
-    order_id CHAR(10) NOT NULL,
-    food_id CHAR(10) NOT NULL,
-    quantity INT NOT NULL,
-    PRIMARY KEY (order_id),
-    FOREIGN KEY (food_id) REFERENCES Food(food_id)
-);
+
 CREATE TABLE Payment (
     payment_id CHAR(10) NOT NULL,
     category_id CHAR(10) NOT NULL,
@@ -57,12 +51,19 @@ CREATE TABLE Orders (
     payment_id CHAR(10) NOT NULL,
     orderDate DATETIME NOT NULL,
     PRIMARY KEY (order_id),
-    FOREIGN KEY (order_id) REFERENCES OrderDetail(order_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (status_id) REFERENCES Status(status_id),
     FOREIGN KEY (payment_id) REFERENCES Payment(payment_id),
-    UNIQUE(order_id)
 );
+
+CREATE TABLE OrderDetail (
+    order_id CHAR(10) NOT NULL,
+    food_id CHAR(10) NOT NULL,
+    quantity INT NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+    FOREIGN KEY (food_id) REFERENCES Food(food_id)
+);
+
 INSERT INTO Roles
 VALUES ("ROLES00001", "Customer");
 INSERT INTO Roles
