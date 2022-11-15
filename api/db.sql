@@ -3,52 +3,53 @@ DROP DATABASE IF EXISTS mobapp;
 CREATE DATABASE mobapp;
 USE mobapp;
 CREATE TABLE Roles (
-    role_id CHAR(10) NOT NULL,
+    role_id INT AUTO_INCREMENT NOT NULL,
     role_name VARCHAR(50) NOT NULL,
     PRIMARY KEY (role_id)
 );
 CREATE TABLE Status (
-    status_id CHAR(10) NOT NULL,
+    status_id INT AUTO_INCREMENT NOT NULL,
     status_name VARCHAR(50) NOT NULL,
     PRIMARY KEY (status_id)
 );
 CREATE TABLE PaymentCategory (
-    category_id CHAR(10) NOT NULL,
+    category_id INT AUTO_INCREMENT NOT NULL,
     payment_name VARCHAR(100) NOT NULL,
     PRIMARY KEY (category_id)
 );
 CREATE TABLE Users (
-    user_id CHAR(10) NOT NULL,
-    username VARCHAR(100) NOT NULL,
-    password VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    role_id CHAR(10) NOT NULL,
+    user_id INT AUTO_INCREMENT NOT NULL,
+    firstname VARCHAR(100) NOT NULL,
+    lastname VARCHAR(100) NOT NULL,
+    password CHAR(60) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    role_id INT NOT NULL,
     PRIMARY KEY (user_id),
     FOREIGN KEY (role_id) REFERENCES Roles(role_id),
     UNIQUE(email)
 );
 CREATE TABLE Food (
-    food_id CHAR(10) NOT NULL,
+    food_id INT AUTO_INCREMENT NOT NULL,
     food_name VARCHAR(50) NOT NULL,
     food_price INT NOT NULL,
     food_image VARCHAR(300) NOT NULL,
-    merchant_id CHAR(10) NOT NULL,
+    merchant_id INT  NOT NULL,
     PRIMARY KEY (food_id),
     FOREIGN KEY (merchant_id) REFERENCES Users(user_id)
 );
 
 CREATE TABLE Payment (
-    payment_id CHAR(10) NOT NULL,
-    category_id CHAR(10) NOT NULL,
+    payment_id INT AUTO_INCREMENT NOT NULL,
+    category_id INT  NOT NULL,
     totalPayment INT NOT NULL,
     PRIMARY KEY (payment_id),
     FOREIGN KEY (category_id) REFERENCES PaymentCategory(category_id)
 );
 CREATE TABLE Orders (
-    order_id CHAR(10) NOT NULL,
-    user_id CHAR(10) NOT NULL,
-    status_id CHAR(10) NOT NULL,
-    payment_id CHAR(10) NOT NULL,
+    order_id INT AUTO_INCREMENT NOT NULL,
+    user_id INT  NOT NULL,
+    status_id INT  NOT NULL,
+    payment_id INT  NOT NULL,
     orderDate DATETIME NOT NULL,
     PRIMARY KEY (order_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
@@ -57,102 +58,108 @@ CREATE TABLE Orders (
 );
 
 CREATE TABLE OrderDetail (
-    order_id CHAR(10) NOT NULL,
-    food_id CHAR(10) NOT NULL,
+    order_id INT  NOT NULL,
+    food_id INT  NOT NULL,
     quantity INT NOT NULL,
     FOREIGN KEY (order_id) REFERENCES Orders(order_id),
     FOREIGN KEY (food_id) REFERENCES Food(food_id)
 );
 
 INSERT INTO Roles
-VALUES ("ROLES00001", "Customer");
+VALUES (NULL, "Customer");
 INSERT INTO Roles
-VALUES ("ROLES00002", "Merchant");
+VALUES (NULL, "Merchant");
 INSERT INTO Roles
-VALUES ("ROLES00003", "Admin");
+VALUES (NULL, "Admin");
 INSERT INTO Users
 VALUES (
-        "C000000001",
-        "Customer1",
+        NULL,
+        "customer1",
+        "last",
         "pass",
         "email@a.com",
-        "ROLES00001"
+        1
     );
 INSERT INTO Users
 VALUES (
-        "C000000002",
+        NULL,
         "Customer2",
+        "last2",
         "pass",
         "email@a1.com",
-        "ROLES00001"
+        1
     );
 INSERT INTO Users
 VALUES (
-        "C000000003",
+        NULL,
         "Customer3",
+        "last3",
         "pass",
         "email@a2.com",
-        "ROLES00001"
+        1
     );
 INSERT INTO Users
 VALUES (
-        "M000000001",
+        NULL,
         "Merchant1",
-        "pass",
+        "last4",
+        "1234567890qwertyuiopasdfghjkl;zxcvbnm,./1234567890-123456789",
         "email@merchant.com",
-        "ROLES00002"
+        2
     );
 INSERT INTO Users
 VALUES (
-        "M000000002",
+        NULL,
         "Merchant2",
-        "pass",
+        "last5",
+        "1234567890qwertyuiopasdfghjkl;zxcvbnm,./1234567890-123456789",
         "email@merchant2.com",
-        "ROLES00002"
+        2
     );
 INSERT INTO Users
 VALUES (
-        "A000000001",
+        NULL,
         "Admin1",
-        "pass",
+        "last12",
+        "1234567890qwertyuiopasdfghjkl;zxcvbnm,./1234567890-123456789",
         "email@admin.com",
-        "ROLES00003"
+        3
     );
 INSERT INTO Status
-VALUES ("Status0001", "Pending");
+VALUES (NULL, "Pending");
 INSERT INTO Status
-VALUES ("Status0002", "Ready");
+VALUES (NULL, "Ready");
 INSERT INTO Status
-VALUES ("Status0003", "Finished");
+VALUES (NULL, "Finished");
 INSERT INTO PaymentCategory
-VALUES ("Payment001", "Gopay");
+VALUES (NULL, "Gopay");
 INSERT INTO PaymentCategory
-VALUES ("Payment002", "Ovo");
+VALUES (NULL, "Ovo");
 INSERT INTO PaymentCategory
-VALUES ("Payment003", "Dana");
+VALUES (NULL, "Dana");
 INSERT INTO PaymentCategory
-VALUES ("Payment004", "M-BCA");
+VALUES (NULL, "M-BCA");
 INSERT INTO Food
 VALUES (
-        "F000000001",
+        NULL,
         "Tempe Mendoan",
         "2000",
         "images/1.jpg",
-        "M000000001"
+        1
     );
 INSERT INTO Food
 VALUES (
-        "F000000002",
+        NULL,
         "Bakso kiloan",
         "9000",
         "images/2.jpg",
-        "M000000002"
+        2
     );
 INSERT INTO Food
 VALUES (
-        "F000000003",
+        NULL,
         "Nasi Rebus",
         "15000",
         "images/3.jpg",
-        "M000000002"
+        2
     );
