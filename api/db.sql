@@ -38,31 +38,35 @@ CREATE TABLE Food (
     FOREIGN KEY (merchant_id) REFERENCES Users(user_id)
 );
 
-CREATE TABLE Payment (
-    payment_id INT AUTO_INCREMENT NOT NULL,
-    category_id INT  NOT NULL,
-    totalPayment INT NOT NULL,
-    PRIMARY KEY (payment_id),
-    FOREIGN KEY (category_id) REFERENCES PaymentCategory(category_id)
-);
+
 CREATE TABLE Orders (
     order_id INT AUTO_INCREMENT NOT NULL,
     user_id INT  NOT NULL,
     status_id INT  NOT NULL,
-    payment_id INT  NOT NULL,
     orderDate DATETIME NOT NULL,
     PRIMARY KEY (order_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
-    FOREIGN KEY (status_id) REFERENCES Status(status_id),
-    FOREIGN KEY (payment_id) REFERENCES Payment(payment_id)
+    FOREIGN KEY (status_id) REFERENCES Status(status_id)
+    -- FOREIGN KEY (payment_id) REFERENCES Payment(payment_id)
 );
 
 CREATE TABLE OrderDetail (
-    order_id INT  NOT NULL,
-    food_id INT  NOT NULL,
+    order_id INT NOT NULL,
+    food_id INT NOT NULL,
     quantity INT NOT NULL,
+    total INT NOT NULL,                                                                             
     FOREIGN KEY (order_id) REFERENCES Orders(order_id),
     FOREIGN KEY (food_id) REFERENCES Food(food_id)
+);
+
+CREATE TABLE Payment (
+    payment_id INT NOT NULL,
+    category_id INT NOT NULL,
+    totalPayment INT NOT NULL,
+    -- PRIMARY KEY (payment_id),
+    FOREIGN KEY (payment_id) REFERENCES Orders(order_id),
+    FOREIGN KEY (category_id) REFERENCES PaymentCategory(category_id),
+    UNIQUE(payment_id)
 );
 
 INSERT INTO Roles
@@ -163,3 +167,22 @@ VALUES (
         "images/3.jpg",
         2
     );
+
+INSERT INTO Orders VALUES (NULL, 1, 1, NOW());
+INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 1, 1, 100000);
+INSERT INTO Payment VALUES (LAST_INSERT_ID(), 1, 100000);
+
+
+INSERT INTO Orders VALUES (NULL, 2, 1, NOW());
+INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 1, 1, 200000);
+INSERT INTO Payment VALUES (LAST_INSERT_ID(), 1, 200000);
+
+
+INSERT INTO Orders VALUES (NULL, 3, 1, NOW());
+INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 1, 1,300000);
+INSERT INTO Payment VALUES (LAST_INSERT_ID(), 4, 300000);
+
+INSERT INTO Orders VALUES (NULL, 2, 1, NOW());
+INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 1, 1,300000);
+INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 2, 1,300000);
+INSERT INTO Payment VALUES (LAST_INSERT_ID(), 2, 600000);
