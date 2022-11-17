@@ -239,3 +239,12 @@ function createOrder($connection, $userid, $category, $food, $quantity)
         return json_encode($response);
     }
 }
+
+function createFood($connection, $food_name, $food_price, $food_image, $merchant_id)
+{
+    mysqli_query($connection, "INSERT INTO Food VALUES (NULL, '$food_name', $food_price, '$food_image', $merchant_id)");
+    $response["success"] = 1;
+    $response["message"] = "Success";
+    http_response_code(200);
+    return json_encode($response);
+}
