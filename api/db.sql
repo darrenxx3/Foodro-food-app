@@ -52,10 +52,12 @@ CREATE TABLE Orders (
 
 CREATE TABLE OrderDetail (
     order_id INT NOT NULL,
+    status_id INT NOT NULL,
     food_id INT NOT NULL,
     quantity INT NOT NULL,
     total INT NOT NULL,                                                                             
     FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+    FOREIGN KEY (status_id) REFERENCES Status(status_id),
     FOREIGN KEY (food_id) REFERENCES Food(food_id)
 );
 
@@ -169,20 +171,27 @@ VALUES (
     );
 
 INSERT INTO Orders VALUES (NULL, 1, 1, NOW());
-INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 1, 1, 100000);
+INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 1, 1, 100000);
 INSERT INTO Payment VALUES (LAST_INSERT_ID(), 1, 100000);
 
 
 INSERT INTO Orders VALUES (NULL, 2, 1, NOW());
-INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 1, 1, 200000);
+INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 1, 1, 200000);
 INSERT INTO Payment VALUES (LAST_INSERT_ID(), 1, 200000);
 
 
 INSERT INTO Orders VALUES (NULL, 3, 1, NOW());
-INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 1, 1,300000);
+INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 1, 1,300000);
 INSERT INTO Payment VALUES (LAST_INSERT_ID(), 4, 300000);
 
 INSERT INTO Orders VALUES (NULL, 2, 1, NOW());
-INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 1, 1,300000);
-INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 2, 1,300000);
+INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 1, 1,300000);
+INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 2, 1,300000);
+INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 2, 1,300000);
+INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 2, 1,300000);
 INSERT INTO Payment VALUES (LAST_INSERT_ID(), 2, 600000);
+
+
+-- SELECT Food.merchant_id, Food.food_id, Food.food_name, Food.food_price, OrderDetail.quantity, OrderDetail.total, OrderDetail.status_id,  OrderDetail.user_id, OrderDetail.orderDate FROM Orders
+-- INNER JOIN OrderDetail ON Orders.order_id = OrderDetail.order_id
+-- INNER JOIN Food ON OrderDetail.food_id = Food.food_id WHERE Food.merchant_id = 1
