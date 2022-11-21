@@ -20,12 +20,11 @@ function getAllUser($connection)
         $response["message"] = "OK";
         http_response_code(200);
         return json_encode($response);
-    } else {
-        $response["success"] = 0;
-        $response["message"] = "No data available";
-        http_response_code(404);
-        return json_encode($response);
     }
+    $response["success"] = 0;
+    $response["message"] = "No data available";
+    http_response_code(404);
+    return json_encode($response);
 }
 
 function getAllFood($connection)
@@ -46,12 +45,11 @@ function getAllFood($connection)
         $response["message"] = "OK";
         http_response_code(200);
         return json_encode($response);
-    } else {
-        $response["success"] = 0;
-        $response["message"] = "No data available";
-        http_response_code(404);
-        return json_encode($response);
     }
+    $response["success"] = 0;
+    $response["message"] = "No data available";
+    http_response_code(404);
+    return json_encode($response);
 }
 
 function getUserById($connection, $user_id,)
@@ -72,12 +70,11 @@ function getUserById($connection, $user_id,)
         $response["message"] = "OK";
         http_response_code(200);
         return json_encode($response);
-    } else {
-        $response["success"] = 0;
-        $response["message"] = "No data available";
-        http_response_code(404);
-        return json_encode($response);
     }
+    $response["success"] = 0;
+    $response["message"] = "No data available";
+    http_response_code(404);
+    return json_encode($response);
 }
 
 function getFoodByMerchant($connection, $merchant_id)
@@ -217,7 +214,7 @@ function getOrderByUser($connection, $user_id)
     return json_encode($response);
 }
 
-// buat cek semua order yang diterima si merchant 
+// To get all order received by a merchant
 function getOrderMerchant($connection, $merchant_id)
 {
     $result = mysqli_query($connection, "SELECT Food.merchant_id, Food.food_id, Food.food_name, 
@@ -315,12 +312,42 @@ function createOrder($connection, $userid, $category, $food, $quantity)
 
 function createFood($connection, $food_name, $food_price, $food_image, $merchant_id)
 {
-    $q = $connection->prepare("INSERT INTO Food VALUES (NULL, ?, ?, ?, ?)");
-    $q->bind_param("sisi", $food_name, $food_price, $food_image, $merchant_id);
-    $q->execute();
-    // mysqli_query($connection, "INSERT INTO Food VALUES (NULL, '$food_name', $food_price, '$food_image', $merchant_id)");
-    $response["success"] = 1;
-    $response["message"] = "Success";
-    http_response_code(200);
-    return json_encode($response);
+    try {
+        $q = $connection->prepare("INSERT INTO Food VALUES (NULL, ?, ?, ?, ?)");
+        $q->bind_param("sisi", $food_name, $food_price, $food_image, $merchant_id);
+        $q->execute();
+        // mysqli_query($connection, "INSERT INTO Food VALUES (NULL, '$food_name', $food_price, '$food_image', $merchant_id)");
+        $response["success"] = 1;
+        $response["message"] = "Success";
+        http_response_code(200);
+        return json_encode($response);
+    } catch (Exception) {
+        $response["success"] = 0;
+        $response["message"] = "Unknown Error";
+        http_response_code(520);
+        return json_encode($response);
+    }
+}
+
+
+
+function updateOrderStatus($connection, $order_id, $food_id, $newStatus)
+{
+    try {
+        mysqli_query($connection, "UPDATE OrderDetail SET status_id = $newStatus 
+        WHERE order_id = $order_id AND food_id = $food_id AND status_id = ($newStatus-1)");
+        if(mysqli_affected_rows($connection)){
+            $response["success"] = 1;
+            $response["message"] = "OK";
+            http_response_code(200);
+            return json_encode($response);
+        }else{
+            throw new Exception("No data updated");
+        }
+    } catch (Exception) {
+        $response["success"] = 0;
+        $response["message"] = "No data available";
+        http_response_code(404);
+        return json_encode($response);
+    }
 }

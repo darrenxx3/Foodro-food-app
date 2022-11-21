@@ -38,15 +38,13 @@ CREATE TABLE Food (
     FOREIGN KEY (merchant_id) REFERENCES Users(user_id)
 );
 
-
 CREATE TABLE Orders (
     order_id INT AUTO_INCREMENT NOT NULL,
     user_id INT  NOT NULL,
-    status_id INT  NOT NULL,
     orderDate DATETIME NOT NULL,
     PRIMARY KEY (order_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id),
-    FOREIGN KEY (status_id) REFERENCES Status(status_id)
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+
     -- FOREIGN KEY (payment_id) REFERENCES Payment(payment_id)
 );
 
@@ -170,24 +168,24 @@ VALUES (
         2
     );
 
-INSERT INTO Orders VALUES (NULL, 1, 1, NOW());
+INSERT INTO Orders VALUES (NULL, 1, NOW());
 INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 1, 1, 100000);
 INSERT INTO Payment VALUES (LAST_INSERT_ID(), 1, 100000);
 
 
-INSERT INTO Orders VALUES (NULL, 2, 1, NOW());
+INSERT INTO Orders VALUES (NULL, 1, NOW());
 INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 1, 1, 200000);
 INSERT INTO Payment VALUES (LAST_INSERT_ID(), 1, 200000);
 
 
-INSERT INTO Orders VALUES (NULL, 3, 1, NOW());
+INSERT INTO Orders VALUES (NULL, 1, NOW());
 INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 1, 1,300000);
 INSERT INTO Payment VALUES (LAST_INSERT_ID(), 4, 300000);
 
-INSERT INTO Orders VALUES (NULL, 2, 1, NOW());
-INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 1, 1,300000);
-INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 2, 1,300000);
-INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 2, 1,300000);
+INSERT INTO Orders VALUES (NULL, 2, NOW());
+INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 3, 1,300000);
+INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 1, 2, 1,300000);
+INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 2, 2, 1,300000);
 INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 2, 1,300000);
 INSERT INTO Payment VALUES (LAST_INSERT_ID(), 2, 600000);
 
@@ -195,3 +193,5 @@ INSERT INTO Payment VALUES (LAST_INSERT_ID(), 2, 600000);
 -- SELECT Food.merchant_id, Food.food_id, Food.food_name, Food.food_price, OrderDetail.quantity, OrderDetail.total, OrderDetail.status_id,  OrderDetail.user_id, OrderDetail.orderDate FROM Orders
 -- INNER JOIN OrderDetail ON Orders.order_id = OrderDetail.order_id
 -- INNER JOIN Food ON OrderDetail.food_id = Food.food_id WHERE Food.merchant_id = 1
+
+-- UPDATE OrderDetail SET status_id = 2 WHERE order_id = 4 AND food_id = 1 AND status_id = 3;
