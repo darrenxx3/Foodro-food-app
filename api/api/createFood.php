@@ -8,6 +8,7 @@ if(isset($_POST["food_name"]) && isset($_POST["food_price"]) && isset($_POST["fo
 } else {
     $response["success"] = 0;
     $response["message"] = "Wrong method or parameter";
+    $response["code"] = "400";
     http_response_code(400);
     echo json_encode($response);
 }

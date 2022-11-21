@@ -63,10 +63,12 @@ CREATE TABLE Payment (
     payment_id INT NOT NULL,
     category_id INT NOT NULL,
     totalPayment INT NOT NULL,
+    proofImage VARCHAR NOT NULL,
     -- PRIMARY KEY (payment_id),
     FOREIGN KEY (payment_id) REFERENCES Orders(order_id),
     FOREIGN KEY (category_id) REFERENCES PaymentCategory(category_id),
-    UNIQUE(payment_id)
+    UNIQUE(payment_id),
+    UNIQUE(proofImage)
 );
 
 INSERT INTO Roles
@@ -170,17 +172,17 @@ VALUES (
 
 INSERT INTO Orders VALUES (NULL, 1, NOW());
 INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 1, 1, 100000);
-INSERT INTO Payment VALUES (LAST_INSERT_ID(), 1, 100000);
+INSERT INTO Payment VALUES (LAST_INSERT_ID(), 1, 100000, "/proof/1.jpg");
 
 
 INSERT INTO Orders VALUES (NULL, 1, NOW());
 INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 1, 1, 200000);
-INSERT INTO Payment VALUES (LAST_INSERT_ID(), 1, 200000);
+INSERT INTO Payment VALUES (LAST_INSERT_ID(), 1, 200000, "/proof/2.jpg");
 
 
 INSERT INTO Orders VALUES (NULL, 1, NOW());
 INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 1, 1,300000);
-INSERT INTO Payment VALUES (LAST_INSERT_ID(), 4, 300000);
+INSERT INTO Payment VALUES (LAST_INSERT_ID(), 4, 300000, "/proof/3.jpg");
 
 INSERT INTO Orders VALUES (NULL, 2, NOW());
 INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 3, 1,300000);

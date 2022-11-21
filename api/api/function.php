@@ -272,6 +272,7 @@ function login($connection, $email, $password)
     }
     $response["success"] = 0;
     $response["message"] = "Wrong email or password";
+    $response["code"] = "401";
     http_response_code(401);
     return json_encode($response);
 }
@@ -279,15 +280,21 @@ function login($connection, $email, $password)
 function register($connection, $role, $firstname, $lastname, $password, $email)
 {
     $password = password_hash($password, PASSWORD_DEFAULT);
-
-    $q = $connection->prepare("INSERT INTO Users VALUES (NULL, ?, ?, ?, ?, ?)");
-    $q->bind_param("ssssi", $firstname, $lastname, $password, $email, $role);
-    $q->execute();
-
-    return getUserById($connection, $q->insert_id);
+    try {
+        $q = $connection->prepare("INSERT INTO Users VALUES (NULL, ?, ?, ?, ?, ?)");
+        $q->bind_param("ssssi", $firstname, $lastname, $password, $email, $role);
+        $q->execute();
+        return getUserById($connection, $q->insert_id);
+    } catch (Exception $e) {
+        $response["success"] = 0;
+        $response["message"] = $e->getMessage();
+        $response["code"] = $e->getCode();
+        http_response_code($e->getCode());
+        return json_encode($response);
+    }
 }
 
-function createOrder($connection, $userid, $category, $food, $quantity)
+function createOrder($connection, $userid, $category, $food, $quantity, $proof)
 {
     try {
         mysqli_query($connection, "INSERT INTO Orders VALUES (NULL, ${userid}, 1, NOW())");
@@ -297,15 +304,17 @@ function createOrder($connection, $userid, $category, $food, $quantity)
             mysqli_query($connection, "INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 1, $food[$i], $quantity[$i], $price*$quantity[$i])");
             $totalPrice = $price * $quantity[$i];
         }
-        mysqli_query($connection, "INSERT INTO Payment VALUES (LAST_INSERT_ID(), ${category}, ${totalPrice})");
+        mysqli_query($connection, "INSERT INTO Payment VALUES (LAST_INSERT_ID(), ${category}, ${totalPrice}, ${proof})");
         $response["success"] = 1;
         $response["message"] = "Success";
+        $response["code"] = "200";
         http_response_code(200);
         return json_encode($response);
-    } catch (Exception) {
+    } catch (Exception $e) {
         $response["success"] = 0;
-        $response["message"] = $totalPrice;
-        // http_response_code(400);
+        $response["message"] = $e->getMessage();
+        $response["code"] = $e->getCode();
+        http_response_code($e->getCode());
         return json_encode($response);
     }
 }
@@ -319,35 +328,70 @@ function createFood($connection, $food_name, $food_price, $food_image, $merchant
         // mysqli_query($connection, "INSERT INTO Food VALUES (NULL, '$food_name', $food_price, '$food_image', $merchant_id)");
         $response["success"] = 1;
         $response["message"] = "Success";
+        $response["code"] = "200";
         http_response_code(200);
         return json_encode($response);
-    } catch (Exception) {
+    } catch (Exception $e) {
         $response["success"] = 0;
-        $response["message"] = "Unknown Error";
-        http_response_code(520);
+        $response["message"] = $e->getMessage();
+        $response["code"] = $e->getCode();
+        http_response_code($e->getCode());
         return json_encode($response);
     }
 }
 
-
+/*
+UPDATE
+*/
 
 function updateOrderStatus($connection, $order_id, $food_id, $newStatus)
 {
     try {
         mysqli_query($connection, "UPDATE OrderDetail SET status_id = $newStatus 
         WHERE order_id = $order_id AND food_id = $food_id AND status_id = ($newStatus-1)");
-        if(mysqli_affected_rows($connection)){
+        if (mysqli_affected_rows($connection)) {
             $response["success"] = 1;
             $response["message"] = "OK";
+            $response["code"] = "200";
+            http_response_code(200);
+            return json_encode($response);
+        } else {
+            throw new Exception("No data updated", 404);
+        }
+    } catch (Exception $e) {
+        $response["success"] = 0;
+        $response["message"] = $e->getMessage();
+        $response["code"] = $e->getCode();
+        http_response_code($e->getCode());
+        return json_encode($response);
+    }
+}
+
+function updateFood($connection, $food_id, $food_name, $food_price, $food_image)
+{
+    try {
+        $q = $connection->prepare("UPDATE Food SET
+        food_name = ?,
+        food_price = ?,
+        food_image = ?
+        WHERE food_id = ?");
+        $q->bind_param("sisi", $food_name, $food_price, $food_image, $food_id);
+        $q->execute();
+        // mysqli_query($connection, "INSERT INTO Food VALUES (NULL, '$food_name', $food_price, '$food_image', $merchant_id)");
+        if($q->affected_rows > 0){
+            $response["success"] = 1;
+            $response["message"] = "Success";
+            $response["code"] = "200";
             http_response_code(200);
             return json_encode($response);
         }else{
-            throw new Exception("No data updated");
+            throw new Exception("No data updated", 520);
         }
-    } catch (Exception) {
+    } catch (Exception $e) {
         $response["success"] = 0;
-        $response["message"] = "No data available";
-        http_response_code(404);
+        $response["message"] = $e->getMessage();
+        $response["code"] = $e->getCode();
+        http_response_code($e->getCode());
         return json_encode($response);
     }
 }
