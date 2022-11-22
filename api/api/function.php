@@ -56,7 +56,7 @@ function getAllFood($connection)
     return json_encode($response);
 }
 
-function getUserById($connection, $user_id,)
+function getUserById($connection, $user_id)
 {
     $result = mysqli_query($connection, "SELECT user_id,firstname,lastname,email,role_id FROM Users WHERE user_id=$user_id");
     $response = array();
