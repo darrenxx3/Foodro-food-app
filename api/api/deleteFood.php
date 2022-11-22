@@ -2,9 +2,9 @@
 include("conn.php");
 include("function.php");
 
-if(isset($_POST["user_id"]) && isset($_POST["food_id"]) && isset($_POST["quantity"]) && isset($_POST["proof"]))
+if(isset($_POST["food_id"]))
 {
-    echo createOrder($connection, $_POST["user_id"], $_POST["food_id"], $_POST["quantity"], $_POST["proof"]);
+    echo deleteFood($connection, $_POST["food_id"]);
 } else {
     $response["success"] = 0;
     $response["message"] = "Wrong method or parameter";

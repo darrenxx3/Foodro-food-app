@@ -12,11 +12,7 @@ CREATE TABLE Status (
     status_name VARCHAR(50) NOT NULL,
     PRIMARY KEY (status_id)
 );
-CREATE TABLE PaymentCategory (
-    category_id INT AUTO_INCREMENT NOT NULL,
-    payment_name VARCHAR(100) NOT NULL,
-    PRIMARY KEY (category_id)
-);
+
 CREATE TABLE Users (
     user_id INT AUTO_INCREMENT NOT NULL,
     firstname VARCHAR(100) NOT NULL,
@@ -24,6 +20,7 @@ CREATE TABLE Users (
     password CHAR(60) NOT NULL,
     email VARCHAR(255) NOT NULL,
     role_id INT NOT NULL,
+    active BOOLEAN NOT NULL,
     PRIMARY KEY (user_id),
     FOREIGN KEY (role_id) REFERENCES Roles(role_id),
     UNIQUE(email)
@@ -33,7 +30,8 @@ CREATE TABLE Food (
     food_name VARCHAR(50) NOT NULL,
     food_price INT NOT NULL,
     food_image VARCHAR(300) NOT NULL,
-    merchant_id INT  NOT NULL,
+    merchant_id INT NOT NULL,
+    listed BOOLEAN NOT NULL,
     PRIMARY KEY (food_id),
     FOREIGN KEY (merchant_id) REFERENCES Users(user_id)
 );
@@ -61,12 +59,10 @@ CREATE TABLE OrderDetail (
 
 CREATE TABLE Payment (
     payment_id INT NOT NULL,
-    category_id INT NOT NULL,
     totalPayment INT NOT NULL,
-    proofImage VARCHAR NOT NULL,
+    proofImage VARCHAR(300) NOT NULL,
     -- PRIMARY KEY (payment_id),
     FOREIGN KEY (payment_id) REFERENCES Orders(order_id),
-    FOREIGN KEY (category_id) REFERENCES PaymentCategory(category_id),
     UNIQUE(payment_id),
     UNIQUE(proofImage)
 );
@@ -84,7 +80,8 @@ VALUES (
         "last",
         "pass",
         "email@a.com",
-        1
+        1,
+        TRUE
     );
 INSERT INTO Users
 VALUES (
@@ -93,7 +90,8 @@ VALUES (
         "last2",
         "pass",
         "email@a1.com",
-        1
+        1,
+        TRUE
     );
 INSERT INTO Users
 VALUES (
@@ -102,7 +100,8 @@ VALUES (
         "last3",
         "pass",
         "email@a2.com",
-        1
+        1,
+        TRUE
     );
 INSERT INTO Users
 VALUES (
@@ -111,7 +110,8 @@ VALUES (
         "last4",
         "1234567890qwertyuiopasdfghjkl;zxcvbnm,./1234567890-123456789",
         "email@merchant.com",
-        2
+        2,
+        TRUE
     );
 INSERT INTO Users
 VALUES (
@@ -120,7 +120,8 @@ VALUES (
         "last5",
         "1234567890qwertyuiopasdfghjkl;zxcvbnm,./1234567890-123456789",
         "email@merchant2.com",
-        2
+        2,
+        TRUE
     );
 INSERT INTO Users
 VALUES (
@@ -129,7 +130,8 @@ VALUES (
         "last12",
         "1234567890qwertyuiopasdfghjkl;zxcvbnm,./1234567890-123456789",
         "email@admin.com",
-        3
+        3,
+        TRUE
     );
 INSERT INTO Status
 VALUES (NULL, "Pending");
@@ -137,21 +139,15 @@ INSERT INTO Status
 VALUES (NULL, "Ready");
 INSERT INTO Status
 VALUES (NULL, "Finished");
-INSERT INTO PaymentCategory
-VALUES (NULL, "Gopay");
-INSERT INTO PaymentCategory
-VALUES (NULL, "Ovo");
-INSERT INTO PaymentCategory
-VALUES (NULL, "Dana");
-INSERT INTO PaymentCategory
-VALUES (NULL, "M-BCA");
+
 INSERT INTO Food
 VALUES (
         NULL,
         "Tempe Mendoan",
         "2000",
         "images/1.jpg",
-        1
+        1,
+        TRUE
     );
 INSERT INTO Food
 VALUES (
@@ -159,7 +155,8 @@ VALUES (
         "Bakso kiloan",
         "9000",
         "images/2.jpg",
-        2
+        2,
+        TRUE
     );
 INSERT INTO Food
 VALUES (
@@ -167,33 +164,34 @@ VALUES (
         "Nasi Rebus",
         "15000",
         "images/3.jpg",
-        2
+        2,
+        TRUE
     );
 
 INSERT INTO Orders VALUES (NULL, 1, NOW());
 INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 1, 1, 100000);
-INSERT INTO Payment VALUES (LAST_INSERT_ID(), 1, 100000, "/proof/1.jpg");
+INSERT INTO Payment VALUES (LAST_INSERT_ID(), 100000, "/proof/1.jpg");
 
 
 INSERT INTO Orders VALUES (NULL, 1, NOW());
 INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 1, 1, 200000);
-INSERT INTO Payment VALUES (LAST_INSERT_ID(), 1, 200000, "/proof/2.jpg");
+INSERT INTO Payment VALUES (LAST_INSERT_ID(), 200000, "/proof/2.jpg");
 
 
 INSERT INTO Orders VALUES (NULL, 1, NOW());
 INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 1, 1,300000);
-INSERT INTO Payment VALUES (LAST_INSERT_ID(), 4, 300000, "/proof/3.jpg");
+INSERT INTO Payment VALUES (LAST_INSERT_ID(), 300000, "/proof/3.jpg");
 
 INSERT INTO Orders VALUES (NULL, 2, NOW());
 INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 3, 1,300000);
 INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 1, 2, 1,300000);
 INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 2, 2, 1,300000);
 INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 3, 2, 1,300000);
-INSERT INTO Payment VALUES (LAST_INSERT_ID(), 2, 600000);
+INSERT INTO Payment VALUES (LAST_INSERT_ID(), 600000, "/proof/4.jpg");
 
 
--- SELECT Food.merchant_id, Food.food_id, Food.food_name, Food.food_price, OrderDetail.quantity, OrderDetail.total, OrderDetail.status_id,  OrderDetail.user_id, OrderDetail.orderDate FROM Orders
--- INNER JOIN OrderDetail ON Orders.order_id = OrderDetail.order_id
--- INNER JOIN Food ON OrderDetail.food_id = Food.food_id WHERE Food.merchant_id = 1
+-- -- SELECT Food.merchant_id, Food.food_id, Food.food_name, Food.food_price, OrderDetail.quantity, OrderDetail.total, OrderDetail.status_id,  OrderDetail.user_id, OrderDetail.orderDate FROM Orders
+-- -- INNER JOIN OrderDetail ON Orders.order_id = OrderDetail.order_id
+-- -- INNER JOIN Food ON OrderDetail.food_id = Food.food_id WHERE Food.merchant_id = 1
 
--- UPDATE OrderDetail SET status_id = 2 WHERE order_id = 4 AND food_id = 1 AND status_id = 3;
+-- -- UPDATE OrderDetail SET status_id = 2 WHERE order_id = 4 AND food_id = 1 AND status_id = 3;

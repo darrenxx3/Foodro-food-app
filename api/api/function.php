@@ -1,5 +1,7 @@
 <?php
-
+/*
+//////////////////////////////   SELECTs   //////////////////////////////
+*/
 function getAllUser($connection)
 {
     $result = mysqli_query($connection, "SELECT * FROM Users");
@@ -14,6 +16,7 @@ function getAllUser($connection)
             $user["lastname"] = $r["lastname"];
             $user["email"] = $r["email"];
             $user["role_id"] = $r["role_id"];
+            $user["active"] = $r["active"];
             array_push($response["data"], $user);
         }
         $response["success"] = 1;
@@ -39,6 +42,7 @@ function getAllFood($connection)
             $food["food_id"] = $r["food_id"];
             $food["food_name"] = $r["food_name"];
             $food["food_image"] = $r["food_image"];
+            $food["listed"] = $r["listed"];
             array_push($response["data"], $food);
         }
         $response["success"] = 1;
@@ -65,6 +69,7 @@ function getUserById($connection, $user_id,)
         $user["lastname"] = $r["lastname"];
         $user["email"] = $r["email"];
         $user["role_id"] = $r["role_id"];
+        $user["active"] = $r["active"];
         array_push($response["data"], $user);
         $response["success"] = 1;
         $response["message"] = "OK";
@@ -89,6 +94,7 @@ function getFoodByMerchant($connection, $merchant_id)
             $food["food_id"] = $r["food_id"];
             $food["food_name"] = $r["food_name"];
             $food["food_image"] = $r["food_image"];
+            $food["listed"] = $r["listed"];
             array_push($response["data"], $food);
         }
         $response["success"] = 1;
@@ -115,6 +121,7 @@ function getFoodById($connection, $food_id)
         $food["food_price"] = $r["food_price"];
         $food["food_image"] = $r["food_image"];
         $food["merchant_id"] = $r["merchant_id"];
+        $food["listed"] = $r["listed"];
         array_push($response["data"], $food);
         $response["success"] = 1;
         $response["message"] = "OK";
@@ -163,7 +170,6 @@ function getPaymentById($connection, $payment_id)
         $r = mysqli_fetch_assoc($result);
         $payment = array();
         $payment["payment_id"] = $r["payment_id"];
-        $payment["category_id"] = $r["category_id"];
         $payment["totalPayment"] = $r["totalPayment"];
         $payment["total"] = $r["total"];
         array_push($response["data"], $payment);
@@ -277,6 +283,10 @@ function login($connection, $email, $password)
     return json_encode($response);
 }
 
+/*
+//////////////////////////////   INSERT   //////////////////////////////
+*/
+
 function register($connection, $role, $firstname, $lastname, $password, $email)
 {
     $password = password_hash($password, PASSWORD_DEFAULT);
@@ -294,7 +304,7 @@ function register($connection, $role, $firstname, $lastname, $password, $email)
     }
 }
 
-function createOrder($connection, $userid, $category, $food, $quantity, $proof)
+function createOrder($connection, $userid, $food, $quantity, $proof)
 {
     try {
         mysqli_query($connection, "INSERT INTO Orders VALUES (NULL, ${userid}, 1, NOW())");
@@ -304,7 +314,7 @@ function createOrder($connection, $userid, $category, $food, $quantity, $proof)
             mysqli_query($connection, "INSERT INTO OrderDetail VALUES (LAST_INSERT_ID(), 1, $food[$i], $quantity[$i], $price*$quantity[$i])");
             $totalPrice = $price * $quantity[$i];
         }
-        mysqli_query($connection, "INSERT INTO Payment VALUES (LAST_INSERT_ID(), ${category}, ${totalPrice}, ${proof})");
+        mysqli_query($connection, "INSERT INTO Payment VALUES (LAST_INSERT_ID(), ${totalPrice}, ${proof})");
         $response["success"] = 1;
         $response["message"] = "Success";
         $response["code"] = "200";
@@ -322,7 +332,7 @@ function createOrder($connection, $userid, $category, $food, $quantity, $proof)
 function createFood($connection, $food_name, $food_price, $food_image, $merchant_id)
 {
     try {
-        $q = $connection->prepare("INSERT INTO Food VALUES (NULL, ?, ?, ?, ?)");
+        $q = $connection->prepare("INSERT INTO Food VALUES (NULL, ?, ?, ?, ?, TRUE)");
         $q->bind_param("sisi", $food_name, $food_price, $food_image, $merchant_id);
         $q->execute();
         // mysqli_query($connection, "INSERT INTO Food VALUES (NULL, '$food_name', $food_price, '$food_image', $merchant_id)");
@@ -341,7 +351,7 @@ function createFood($connection, $food_name, $food_price, $food_image, $merchant
 }
 
 /*
-UPDATE
+//////////////////////////////   UPDATE   //////////////////////////////
 */
 
 function updateOrderStatus($connection, $order_id, $food_id, $newStatus)
@@ -373,19 +383,89 @@ function updateFood($connection, $food_id, $food_name, $food_price, $food_image)
         $q = $connection->prepare("UPDATE Food SET
         food_name = ?,
         food_price = ?,
-        food_image = ?
+        food_image = ?,
         WHERE food_id = ?");
         $q->bind_param("sisi", $food_name, $food_price, $food_image, $food_id);
         $q->execute();
         // mysqli_query($connection, "INSERT INTO Food VALUES (NULL, '$food_name', $food_price, '$food_image', $merchant_id)");
-        if($q->affected_rows > 0){
+        if ($q->affected_rows > 0) {
             $response["success"] = 1;
             $response["message"] = "Success";
             $response["code"] = "200";
             http_response_code(200);
             return json_encode($response);
-        }else{
+        } else {
             throw new Exception("No data updated", 520);
+        }
+    } catch (Exception $e) {
+        $response["success"] = 0;
+        $response["message"] = $e->getMessage();
+        $response["code"] = $e->getCode();
+        http_response_code($e->getCode());
+        return json_encode($response);
+    }
+}
+
+function reactivateUser($connection, $user_id)
+{
+    try {
+        mysqli_query($connection, "UPDATE users SET active = TRUE WHERE user_id = $user_id AND active = FALSE");
+        if (mysqli_affected_rows($connection)) {
+            $response["success"] = 1;
+            $response["message"] = "OK";
+            $response["code"] = "200";
+            http_response_code(200);
+            return json_encode($response);
+        } else {
+            throw new Exception("No data updated", 404);
+        }
+    } catch (Exception $e) {
+        $response["success"] = 0;
+        $response["message"] = $e->getMessage();
+        $response["code"] = $e->getCode();
+        http_response_code($e->getCode());
+        return json_encode($response);
+    }
+}
+
+/*
+//////////////////////////////   DELETE   //////////////////////////////
+*/
+
+function deleteUser($connection, $user_id)
+{
+    try {
+        mysqli_query($connection, "UPDATE users SET active = FALSE WHERE user_id = $user_id AND active = TRUE");
+        if (mysqli_affected_rows($connection)) {
+            $response["success"] = 1;
+            $response["message"] = "OK";
+            $response["code"] = "200";
+            http_response_code(200);
+            return json_encode($response);
+        } else {
+            throw new Exception("No data updated", 404);
+        }
+    } catch (Exception $e) {
+        $response["success"] = 0;
+        $response["message"] = $e->getMessage();
+        $response["code"] = $e->getCode();
+        http_response_code($e->getCode());
+        return json_encode($response);
+    }
+}
+
+function deleteFood($connection, $food_id)
+{
+    try {
+        mysqli_query($connection, "UPDATE food SET listed = FALSE WHERE food_id = $food_id AND listed = TRUE");
+        if (mysqli_affected_rows($connection)) {
+            $response["success"] = 1;
+            $response["message"] = "OK";
+            $response["code"] = "200";
+            http_response_code(200);
+            return json_encode($response);
+        } else {
+            throw new Exception("No data updated", 404);
         }
     } catch (Exception $e) {
         $response["success"] = 0;
