@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.latutslab_00000053580.foodro_user.HomeUser">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/headerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/header"
+                android:padding="20dp"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/user_profile"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_baseline_account_circle_24"
+                    android:tint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@id/textHello"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/textHello" />
+
+                <TextView
+                    android:id="@+id/textHello"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Hello,"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/user_profile"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txtUsername"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Van Gogh
+        "
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@id/textHello"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textFind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="35dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="Fresh food, cook daily!"
+                    android:textColor="@color/white"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textHello" />
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/notification"-->
+<!--                    android:layout_width="30dp"-->
+<!--                    android:layout_height="30dp"-->
+<!--                    android:contentDescription="@string/app_name"-->
+<!--                    android:src="@drawable/ic_baseline_notifications_24"-->
+<!--                    android:tint="@color/white"-->
+<!--                    app:layout_constraintBottom_toBottomOf="@id/textHello"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="@id/textHello" />-->
+
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/linearLayout"-->
+<!--                    android:layout_width="370dp"-->
+<!--                    android:layout_height="46dp"-->
+<!--                    android:background="@drawable/search_bar"-->
+<!--                    android:orientation="horizontal"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/textFind"-->
+<!--                    tools:layout_editor_absoluteX="2dp">-->
+
+<!--                    <EditText-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="40dp"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:background="@null"-->
+<!--                        android:hint="Search restaurants..."-->
+<!--                        android:imeOptions="actionSearch"-->
+<!--                        android:inputType="text"-->
+<!--                        android:paddingStart="15dp"-->
+<!--                        android:paddingEnd="15dp"-->
+<!--                        android:textColor="@color/colorAccent"-->
+<!--                        android:textSize="16sp" />-->
+
+<!--                    <ImageView-->
+<!--                        android:layout_width="40dp"-->
+<!--                        android:layout_height="40dp"-->
+<!--                        android:background="@drawable/search_icon_background"-->
+<!--                        android:contentDescription="@string/app_name"-->
+<!--                        android:padding="6dp"-->
+<!--                        android:src="@drawable/ic_baseline_search_24" />-->
+
+<!--                </LinearLayout>-->
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="All Restaurants"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:textColor="#000000"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/userRV"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabCart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:layout_margin="20dp"
+        android:layout_gravity="bottom|right"
+        android:src="@drawable/ic_baseline_add_shopping_cart_24" />
+
+</FrameLayout>
