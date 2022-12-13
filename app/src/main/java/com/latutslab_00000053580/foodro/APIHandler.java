@@ -40,8 +40,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class APIHandler {
-    private String endpoint = "https://foodro.000webhostapp.com/api/";
-    private String imageUrl = "https://foodro.000webhostapp.com/";
+//    private String endpoint = "https://foodro.000webhostapp.com/api/";
+//    private String imageUrl = "https://foodro.000webhostapp.com/";
+
+    private String endpoint = "http://192.168.100.23:3002/api/";
+    private String imageUrl = "http://192.168.100.23:3002/";
 
     public void login(Context context, String email, String password) {
         RequestQueue queue = Volley.newRequestQueue(context);
