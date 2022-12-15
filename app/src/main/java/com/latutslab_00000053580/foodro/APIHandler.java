@@ -146,18 +146,6 @@ public class APIHandler {
                     if (isSuccess == 1) {
                         Toast.makeText(context, "Register Success", Toast.LENGTH_SHORT).show();
                     }
-                    //String success = respObj.getString("success");
-//                    JSONArray data = respObj.getJSONArray("data");
-//                    JSONObject a = data.getJSONObject(0);
-//                    TODO: Put these data into sqlite
-//                            a.getInt("user_id"),
-//                            a.getString("firstname"),
-//                            a.getString("lastname"),
-//                            a.getString("email"),
-//                            a.getInt("role_id"),
-//                            a.getInt("active")
-
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -208,7 +196,6 @@ public class APIHandler {
                     for (int i = 0; i < data.length(); i++) {
                         JSONObject a = data.getJSONObject(i);
 
-//                        TODO: update ui menu dari json di sini
                         users.add(
                                 new User(
                                         a.getInt("user_id"),
@@ -222,31 +209,11 @@ public class APIHandler {
                         );
                     }
 
-
                     MerchantAdapter adapter = new MerchantAdapter(users, context);
-
-//                    adapter.setOnItemClickListener(new MerchantAdapter.ClickListener() {
-//                        @Override
-//                        public void onItemClick(int position, View v) {
-//                            Log.i("TESTON", "position: " + position);
-//                            User user = users.get(position);
-//                            Intent intent = new Intent(context, MenuUser.class);
-//                            intent.putExtra("id", user.getId());
-//                            intent.putExtra("name", user.getFullName());
-//                            intent.putExtra("image", user.getImage());
-//                            context.startActivity(intent);
-//                        }
-//                    });
 
                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
                     recyclerView.setLayoutManager(linearLayoutManager);
                     recyclerView.setAdapter(adapter);
-
-//                    if(isInit){
-//                        Intent i = new Intent().setClass(context, MainActivity.class);
-//                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-//                        context.startActivity(i);
-//                    }
 
                     Toast.makeText(context, "Complete", Toast.LENGTH_SHORT).show();
                     Log.i("VOLLEYDONE", "DONE");
@@ -622,7 +589,6 @@ public class APIHandler {
                     for (int i = 0; i < foodJson.length(); i++) {
                         JSONObject a = foodJson.getJSONObject(i);
 
-//                        TODO: masukin ke adapter recyclerview
                         if (a.getInt("listed") == 1) {
                             foods.add(
                                     new Food(
@@ -695,53 +661,6 @@ public class APIHandler {
         queue.add(sr);
     }
 
-    // get details per food (diliat sama merchant+user)
-    public void getFoodById(Context context, int food_id) {
-        RequestQueue queue = Volley.newRequestQueue(context);
-
-        StringRequest sr = new StringRequest(Request.Method.GET, endpoint + "getFoodById.php", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Toast.makeText(context, "Successfully get food details", Toast.LENGTH_SHORT).show();
-                try {
-                    JSONObject respObj = new JSONObject(response);
-
-                    //String success = respObj.getString("success");
-                    JSONArray data = respObj.getJSONArray("data");
-                    JSONObject a = data.getJSONObject(0);
-                    Food food = new Food(
-                            a.getInt("food_id"),
-                            a.getString("food_name"),
-                            a.getInt("food_price"),
-                            imageUrl + a.getString("food_image"),
-                            a.getInt("merchant_id"),
-                            a.getInt("listed")
-                    );
-                    // TODO: Update ui disini
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Fail to get food = " + error, Toast.LENGTH_SHORT).show();
-            }
-        }) {
-            @Nullable
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("food_id", Integer.toString(food_id));
-                return params;
-            }
-        };
-        queue.add(sr);
-    }
-
-
     // bikin listing makanan baru (diliat sama merchant)
     public void createFood(Context context, String name, int price, Bitmap image, int merchant_id) {
         RequestQueue queue = Volley.newRequestQueue(context);
@@ -756,13 +675,6 @@ public class APIHandler {
                     //String success = respObj.getString("success");
                     JSONArray data = respObj.getJSONArray("data");
                     JSONObject a = data.getJSONObject(0);
-//                    TODO: Ga tau ini data diapain
-//                    a.getInt("food_id"),
-//                            a.getString("food_name"),
-//                            a.getInt("food_price"),
-//                            a.getString("food_image"),
-//                            a.getInt("merchant_id"),
-//                    a.getInt("listed")
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -809,20 +721,7 @@ public class APIHandler {
                     //String success = respObj.getString("success");
                     JSONArray data = respObj.getJSONArray("data");
                     JSONObject a = data.getJSONObject(0);
-//                    TODO: Ga tau ini data diapain
-//                        a.getInt("order_id")
-//                        a.getInt("merchant_id")
-//                        a.getInt("food_id")
-//                        a.getString("food_name")
-//                        a.getInt("food_price")
-//                        a.getInt("quantity")
-//                        a.getInt("total")
-//                        a.getInt("status_id")
-//                        a.getInt("user_id")
-//                        a.getInt("orderDate")
-//                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//                        Date birthDate = sdf.parse(a.getString("orderDate"));
-
+//
                     Toast.makeText(context, "Thanks you for your purchase!", Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -880,13 +779,6 @@ public class APIHandler {
                     //String success = respObj.getString("success");
                     JSONArray data = respObj.getJSONArray("data");
                     JSONObject a = data.getJSONObject(0);
-//                    TODO: Ga tau ini data diapain
-//                      $detail = array();
-//                      $detail["order_id"] = $r["order_id"];
-//                      $detail["status_id"] = $r["status_id"];
-//                      $detail["food_id"] = $r["food_id"];
-//                      $detail["quantity"] = $r["quantity"];
-//                      $detail["total"] = $r["total"];
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -931,13 +823,6 @@ public class APIHandler {
                     //String success = respObj.getString("success");
                     JSONArray data = respObj.getJSONArray("data");
                     JSONObject a = data.getJSONObject(0);
-//                    TODO: Ga tau ini data diapain
-//                    a.getInt("food_id"),
-//                            a.getString("food_name"),
-//                            a.getInt("food_price"),
-//                            a.getString("food_image"),
-//                            a.getInt("merchant_id"),
-//                    a.getInt("listed")
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -978,7 +863,6 @@ public class APIHandler {
             @Override
             public void onResponse(String response) {
                 try {
-                    //TODO: Ga tau ini data diapain
 
                     JSONObject respObj = new JSONObject(response);
                     int success = respObj.getInt("success");
