@@ -79,16 +79,6 @@ public class APIHandler {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     context.startActivity(intent);
 
-//                    Cursor cursor = dbUser.getUser();
-//                    cursor.moveToFirst();
-                    // pindah activity
-//                    if (user.getRole() == 1) {
-//                        getAllMerchant(context);
-//                    } else if (user.getRole() == 2) {
-//                        //pinda ke tampilan merchant
-//                        getOrderMerchant(context, user.getId(), null);
-//                    }
-//                    Log.i("LOGIN", cursor.getString(1));
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.e("LOGIN", e.toString());
@@ -603,16 +593,7 @@ public class APIHandler {
                         }
 
                     }
-                    // klo butu aja
-//                    User merchant = new User(
-//                            merchantJson.getInt("user_id"),
-//                            merchantJson.getString("firstname"),
-//                            merchantJson.getString("lastname"),
-//                            merchantJson.getString("email"),
-//                            2,
-//                            merchantJson.getInt("active"),
-//                            merchantJson.getString("image")
-//                    );
+
 
                     if (foods.isEmpty()) {
                         foodRV.setVisibility(View.GONE);
