@@ -106,7 +106,7 @@ function getFoodByMerchant($connection, $merchant_id)
 }
 
 function getFoodById($connection, $food_id)
-{   
+{
     $result = mysqli_query($connection, "SELECT * FROM Food WHERE food_id=$food_id");
     $response = array();
     if (mysqli_num_rows($result) > 0) {
@@ -120,33 +120,6 @@ function getFoodById($connection, $food_id)
         $food["merchant_id"] = $r["merchant_id"];
         $food["listed"] = $r["listed"];
         array_push($response["data"], $food);
-        $response["success"] = 1;
-        $response["message"] = "OK";
-        http_response_code(200);
-        return json_encode($response);
-    }
-    $response["success"] = 0;
-    $response["message"] = "No data available";
-    http_response_code(404);
-    return json_encode($response);
-}
-
-function getOrderDetailById($connection, $order_id)
-{
-    $result = mysqli_query($connection, "SELECT * FROM OrderDetail WHERE order_id='${order_id}'");
-    $response = array();
-
-    if (mysqli_num_rows($result) > 0) {
-        $response["data"] = array();
-        while ($r = mysqli_fetch_array($result)) {
-            $detail = array();
-            $detail["order_id"] = $r["order_id"];
-            $detail["status_id"] = $r["status_id"];
-            $detail["food_id"] = $r["food_id"];
-            $detail["quantity"] = $r["quantity"];
-            $detail["total"] = $r["total"];
-            array_push($response["data"], $detail);
-        }
         $response["success"] = 1;
         $response["message"] = "OK";
         http_response_code(200);
@@ -416,7 +389,11 @@ function updateOrderStatus($connection, $order_id, $food_id, $newStatus)
         mysqli_query($connection, "UPDATE OrderDetail SET status_id = $newStatus 
         WHERE order_id = $order_id AND food_id = $food_id AND status_id = ($newStatus-1)");
         if (mysqli_affected_rows($connection)) {
-            return getOrderDetailById($connection, $order_id);
+            $response["success"] = 1;
+            $response["message"] = "success";
+            $response["code"] = "200";
+            http_response_code(200);
+            return json_encode($response);
         } else {
             throw new Exception("No data updated", 404);
         }
